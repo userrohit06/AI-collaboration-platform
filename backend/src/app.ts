@@ -5,8 +5,8 @@ import { env } from "./config/env";
 import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import { notFoundHandler } from "./middleware/not-found.middleware";
-import { errorHandler } from "./middleware/error.middleware";
+import { errorHandler } from "./middlewares/error.middleware";
+import { notFound } from "./middlewares/not-found.middleware";
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(express.json());
 
 app.use("/api/v1", routes);
 
-app.use(notFoundHandler);
+app.use(notFound);
 app.use(errorHandler);
 
 export default app;
