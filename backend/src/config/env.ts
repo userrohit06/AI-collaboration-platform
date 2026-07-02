@@ -1,13 +1,16 @@
 import dotenv from "dotenv";
+import { z } from "zod";
 
 dotenv.config();
 
-export const env = {
-  PORT: process.env.PORT || 5000,
-  NODE_ENV: process.env.NODE_ENV || "development",
-  CLIENT_URL: process.env.CLIENT_URL || "http://localhost:5173",
-  MONGODB_URI: process.env.MONGODB_URI || "",
-  REDIS_URL: process.env.REDIS_URL || "",
-  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || "",
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "",
-};
+const envSchema = z.object({
+  PORT: z.coerce.number().default(5000),
+  NODE_ENV: z.enum(["development", "production", "test"]),
+  CLIENT_URL: z.string().url(),
+  MONGODB_URI: z.string().min(1),
+  REDIS_URL: z.string().min(1),
+  JWT_ACCESS_SECRET: z.string().min(10),
+  JWT_REFRESH_SECRET: z.string().min(10),
+});
+
+export const env = envSchema.parse(process.env);
